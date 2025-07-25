@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>TODO一覧</title>
+    <style>
+        body {
+            background: #f5f6f5;
+            font-family: 'Segoe UI', 'Meiryo', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background: #223c1b url('https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+            color: #fff;
+            text-align: center;
+            padding: 40px 0 30px 0;
+        }
+        .header h1 {
+            font-size: 64px;
+            margin: 0;
+            letter-spacing: 2px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+            padding: 40px 40px 30px 40px;
+        }
+        .tab-bar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .tab-bar button {
+            flex: 1;
+            padding: 16px 0;
+            border: none;
+            background: #e6ece3;
+            color: #223c1b;
+            font-size: 20px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            margin-right: 4px;
+            transition: background 0.2s;
+        }
+        .tab-bar button.active {
+            background: #3a5d2c;
+            color: #fff;
+        }
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+        .actions a {
+            text-decoration: none;
+            margin-left: 10px;
+        }
+        .add-btn {
+            background: #3a5d2c;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .add-btn:hover {
+            background: #2c4721;
+        }
+        .tasks-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+        .task-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .task-card {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            margin-bottom: 16px;
+            padding: 18px 24px;
+            transition: box-shadow 0.2s;
+        }
+        .task-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+        }
+        .task-check {
+            margin-right: 18px;
+        }
+        .task-title {
+            font-size: 18px;
+            font-weight: 600;
+            flex: 1;
+        }
+        .task-title.checked {
+            text-decoration: line-through;
+            color: #d32f2f;
+        }
+        .task-date {
+            color: #888;
+            font-size: 15px;
+            margin-left: 18px;
+            display: flex;
+            align-items: center;
+        }
+        .task-date i {
+            margin-right: 4px;
+        }
+        .task-actions {
+            display: flex;
+            align-items: center;
+            margin-left: 18px;
+        }
+        .task-actions button, .task-actions a {
+            background: none;
+            border: none;
+            color: #3a5d2c;
+            font-size: 18px;
+            margin-left: 8px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .task-actions button:hover, .task-actions a:hover {
+            color: #d32f2f;
+        }
+        .task-status {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            margin-left: 18px;
+            background: #e0e000;
+            display: inline-block;
+        }
+        .task-status.overdue {
+            background: #d32f2f;
+        }
+        .task-status.today {
+            background: #3a5d2c;
+        }
+        .completed-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 32px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Todo App</h1>
+    </div>
+    <div class="container">
+        <div class="tab-bar">
+            <button class="active">Today</button>
+            <button>Pending</button>
+            <button>Overdue</button>
+        </div>
+        <div class="actions">
+            <a href="/add/input"><button class="add-btn">＋ Add Task</button></a>
+            <a href="/categories/add/input"><button class="add-btn" style="background:#e6ece3;color:#223c1b;">カテゴリー追加</button></a>
+        </div>
+        <div class="tasks-title">Tasks</div>
+        <ul class="task-list">
+            {% for task in tasks %}
+            <li class="task-card">
+                <input type="checkbox" class="task-check" onchange="toggleStrike(this)">
+                <span class="task-title">{{ task.title }}</span>
+                <span class="task-date"><i>🕒</i> {{ task.until_date }}</span>
+                <span class="task-status {% if task.until_date < today %}overdue{% elif task.until_date == today %}today{% endif %}"></span>
+                <span class="task-actions">
+                    <a href="/tasks/edit/{{ task.id }}">✏️</a>
+                    <button onclick="deleteTask({{ task.id }})">🗑️</button>
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+        <div class="completed-title">Completed ▲</div>
+    </div>
+    <script>
+    function deleteTask(taskId) {
+        if(!confirm('本当に削除しますか？')) return;
+        fetch('/api/tasks/delete/' + taskId, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(result => {
+            if(result.success) {
+                window.location.reload();
+            } else {
+                alert('削除失敗: ' + (result.error || '不明なエラー'));
+            }
+        });
+    }
+    function toggleStrike(checkbox) {
+        const title = checkbox.nextElementSibling;
+        if (checkbox.checked) {
+            title.classList.add('checked');
+        } else {
+            title.classList.remove('checked');
+        }
+    }
+    </script>
+</body>
+</html> 

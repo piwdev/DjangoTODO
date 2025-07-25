@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>新しいタスク追加</title>
+    <script>
+    function addTask(event) {
+        event.preventDefault();
+        const data = {
+            title: document.getElementById('title').value,
+            description: document.getElementById('description').value,
+            start_date: document.getElementById('start_date').value,
+            until_date: document.getElementById('until_date').value,
+            category_id: document.getElementById('category_id').value
+        };
+        fetch('/api/tasks/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            if(result.success) {
+                window.location.href = '/';
+            } else {
+                alert('登録失敗: ' + (result.error || '不明なエラー'));
+            }
+        });
+    }
+    </script>
+</head>
+<body>
+    <h1>新しいタスク追加</h1>
+    <form onsubmit="addTask(event)">
+        <label>件名: <input type="text" id="title" required></label><br>
+        <label>説明: <textarea id="description"></textarea></label><br>
+        <label>カテゴリー:
+            <select id="category_id">
+                <option value="">--選択--</option>
+                {% for cat in categories %}
+                <option value="{{ cat.id }}">{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+        </label><br>
+        <label>期限_開始日: <input type="date" id="start_date" required></label><br>
+        <label>期限_終了日: <input type="date" id="until_date" required></label><br>
+        <button type="submit">ADD</button>
+    </form>
+    <a href="/">一覧に戻る</a>
+</body>
+</html> 

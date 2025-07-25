@@ -1,0 +1,115 @@
+- model: tasks.category
+  pk: 1
+  fields:
+    name: 学習
+- model: tasks.category
+  pk: 2
+  fields:
+    name: 仕事
+- model: tasks.category
+  pk: 3
+  fields:
+    name: 家事
+- model: tasks.category
+  pk: 4
+  fields:
+    name: 趣味
+- model: tasks.category
+  pk: 5
+  fields:
+    name: その他
+
+# Task 100件
+
+- model: tasks.task
+  pk: 1
+  fields:
+    title: "英語勉強1"
+    description: "英語の単語を10個覚える"
+    start_date: 2024-07-01
+    until_date: 2024-07-02
+    done_at: null
+    category: 1
+- model: tasks.task
+  pk: 2
+  fields:
+    title: "レポート作成2"
+    description: "週次レポートをまとめる"
+    start_date: 2024-07-01
+    until_date: 2024-07-03
+    done_at: null
+    category: 2
+- model: tasks.task
+  pk: 3
+  fields:
+    title: "掃除3"
+    description: "部屋の掃除をする"
+    start_date: 2024-07-01
+    until_date: 2024-07-04
+    done_at: null
+    category: 3
+- model: tasks.task
+  pk: 4
+  fields:
+    title: "ギター練習4"
+    description: "新しい曲を練習する"
+    start_date: 2024-07-01
+    until_date: 2024-07-05
+    done_at: null
+    category: 4
+- model: tasks.task
+  pk: 5
+  fields:
+    title: "買い物5"
+    description: "食材を買いに行く"
+    start_date: 2024-07-01
+    until_date: 2024-07-06
+    done_at: null
+    category: 5
+- model: tasks.task
+  pk: 6
+  fields:
+    title: "英語勉強6"
+    description: "リスニング練習をする"
+    start_date: 2024-07-02
+    until_date: 2024-07-03
+    done_at: null
+    category: 1
+- model: tasks.task
+  pk: 7
+  fields:
+    title: "レポート作成7"
+    description: "月次レポートをまとめる"
+    start_date: 2024-07-02
+    until_date: 2024-07-04
+    done_at: null
+    category: 2
+- model: tasks.task
+  pk: 8
+  fields:
+    title: "洗濯8"
+    description: "洗濯物をたたむ"
+    start_date: 2024-07-02
+    until_date: 2024-07-05
+    done_at: null
+    category: 3
+- model: tasks.task
+  pk: 9
+  fields:
+    title: "ピアノ練習9"
+    description: "新しい曲を練習する"
+    start_date: 2024-07-02
+    until_date: 2024-07-06
+    done_at: null
+    category: 4
+- model: tasks.task
+  pk: 10
+  fields:
+    title: "買い物10"
+    description: "日用品を買いに行く"
+    start_date: 2024-07-02
+    until_date: 2024-07-07
+    done_at: null
+    category: 5
+
+# 11〜100件を自動生成
